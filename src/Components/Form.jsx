@@ -94,7 +94,7 @@ const Form = () => {
     };
 
     try {
-      const response = await fetch("https://script.google.com/macros/s/AKfycbyH1GpsH1hVQtsCivVPwtKY-_4UhRrpL27Z-KbKzhynpb3w90pF0XNCooc4fUXgLwzPLw/exec", {
+      const response = await fetch("https://script.google.com/macros/s/AKfycbw3O3FI4T2f9z02rfrsddUuPVK2S694Z5AkK6fb3DmjB4BhECd4wOi8jFwAC_s-Nk3jig/exec", {
         method: "POST",
         headers: {
           "Content-Type": "text/plain;charset=utf-8" // Set the Content-Type header
@@ -151,11 +151,13 @@ const Form = () => {
         <div className="mb-4 p-4 bg-green-100 text-green-700 rounded">
           {successMessage}
           <br />
-          <p>
-            Reference Number: <strong>{referenceNumber}</strong>
+          <p className="mt-2">
+            <strong>Reference Number: {referenceNumber}</strong> - Make a note of this.
           </p>
+          <p className="mt-4 font-bold text-red-600">IMPORTANT: Please check your spam folder if you do not see the email!</p>
         </div>
       )}
+
       {errorMessage && <div className="mb-4 p-4 bg-red-100 text-red-700 rounded">{errorMessage}</div>}
       {!complete && (
         <form onSubmit={firstPage ? handleNext : handleFinalSubmit}>
@@ -233,7 +235,11 @@ const Form = () => {
                 />
               </div>
               <div className="text-right">
-                <button type="submit" className={`px-4 py-2 text-white bg-blue-600 rounded ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}`} disabled={isSubmitting || !allFieldsCompleted()}>
+                <button
+                  type="submit"
+                  className={`px-4 py-2 text-white bg-blue-600 rounded ${isSubmitting || !allFieldsCompleted() ? "bg-gray-600 opacity-50 cursor-not-allowed" : ""}`}
+                  disabled={isSubmitting || !allFieldsCompleted()}
+                >
                   {isSubmitting ? "Submitting..." : "Next"}
                 </button>
               </div>
@@ -245,7 +251,11 @@ const Form = () => {
                 <button type="button" onClick={handleBack} className="px-4 py-2 text-white bg-gray-600 rounded">
                   Back
                 </button>
-                <button type="submit" className={`px-4 py-2 text-white bg-blue-600 rounded ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}`} disabled={isSubmitting || !anyQuantitiesAdded()}>
+                <button
+                  type="submit"
+                  className={`px-4 py-2 text-white bg-blue-600 rounded ${isSubmitting || !anyQuantitiesAdded() ? "bg-gray-600 opacity-50 cursor-not-allowed" : ""}`}
+                  disabled={isSubmitting || !anyQuantitiesAdded()}
+                >
                   {isSubmitting ? "Submitting..." : "Submit"}
                 </button>
               </div>

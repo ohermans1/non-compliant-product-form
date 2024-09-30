@@ -154,7 +154,7 @@ const Form = () => {
           <p className="mt-2">
             <strong>Reference Number: {referenceNumber}</strong> - Make a note of this.
           </p>
-          <p className="mt-4 font-bold text-red-600">IMPORTANT: Please check your spam folder if you do not see the email!</p>
+          <p className="mt-4 font-bold text-red-600">IMPORTANT: Please check your spam folder if you do not see the email! Remember to mark as not spam.</p>
         </div>
       )}
 

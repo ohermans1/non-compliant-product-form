@@ -18,9 +18,10 @@ const Form = () => {
   const generateReferenceNumber = () => {
     const companySegment = companyName.replace(/\s+/g, "").slice(0, 4).toUpperCase();
     const now = new Date();
-    const minutesSegment = String(now.getMinutes()).padStart(2, "0");
+    const hoursSegment = String(now.getHours()).padStart(2, "0"); // Get hours in 24-hour format
+    const minutesSegment = String(now.getMinutes()).padStart(2, "0"); // Get minutes and format to 2 digits
 
-    return `${companySegment}-${minutesSegment}`;
+    return `${companySegment}-${hoursSegment}${minutesSegment}`; // Combine hours and minutes
   };
 
   // Handle submission of the initial form (company and contact details)
@@ -72,7 +73,7 @@ const Form = () => {
     };
 
     try {
-      const response = await fetch("https://script.google.com/macros/s/AKfycbxCTpQD8vWdRbizgmEW5olF0QpRdWi1I8rjcLhJvOtT0j1dpA634WNRh21mEqnZy21WyA/exec", {
+      const response = await fetch("https://script.google.com/macros/s/AKfycbxf-gAoblQqZAU6eDpBJq7aOT7d4rS5LyP7GAF42hZwhrBH30ZdMfl2IHA9NgRZNKt5jQ/exec", {
         method: "POST",
         headers: {
           "Content-Type": "text/plain;charset=utf-8" // Set the Content-Type header
@@ -82,7 +83,9 @@ const Form = () => {
       });
 
       if (response.ok) {
-        setSuccessMessage("Response submitted successfully! Please make a note of this reference number and check your email for the next steps.");
+        setSuccessMessage(
+          "Response submitted successfully! Please make a note of this reference number and check your email for the next steps. If you do not see the email, please check your spam folder."
+        );
         // Reset fields
         setCompanyName("");
         setContactPerson("");
@@ -118,7 +121,10 @@ const Form = () => {
       </p>
       {successMessage && (
         <div className="mb-4 p-4 bg-green-100 text-green-700 rounded">
-          {successMessage} Reference Number: <strong>{referenceNumber}</strong>
+          {successMessage}
+          <p>
+            Reference Number: <strong>{referenceNumber}</strong>
+          </p>
         </div>
       )}
       {errorMessage && <div className="mb-4 p-4 bg-red-100 text-red-700 rounded">{errorMessage}</div>}

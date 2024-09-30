@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import ProductSelector from "./ProductSelector"; // Assuming this file is named ProductSelector.js
 import { productData } from "../Data/data";
+
 const Form = () => {
   const [companyName, setCompanyName] = useState("");
+  const [companyTradingName, setCompanyTradingName] = useState("");
   const [contactPerson, setContactPerson] = useState("");
   const [contactEmail, setContactEmail] = useState("");
+  const [contactNumber, setContactNumber] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -23,11 +26,30 @@ const Form = () => {
     return `${companySegment}-${hoursSegment}${minutesSegment}`; // Combine hours and minutes
   };
 
+  // Check if all fields are completed
+  const allFieldsCompleted = () => {
+    return companyName && companyTradingName && contactPerson && contactEmail && contactNumber;
+  };
+
+  // Check if there are any quantities added
+  const anyQuantitiesAdded = () => {
+    return Object.values(selectedProducts).some(brandProducts =>
+      Object.values(brandProducts).some(product => {
+        return Object.values(product.quantities).some(quantity => quantity.quantity > 0);
+      })
+    );
+  };
+
   // Handle submission of the initial form (company and contact details)
   const handleNext = e => {
     e.preventDefault();
     setErrorMessage("");
     setSuccessMessage("");
+
+    if (!allFieldsCompleted()) {
+      setErrorMessage("Please fill in all fields before proceeding.");
+      return; // Prevent moving to the next page
+    }
 
     setFirstPage(false); // Move to product selection page after submitting
   };
@@ -64,13 +86,15 @@ const Form = () => {
     const data = {
       referenceNumber: reference,
       companyName,
+      companyTradingName,
       contactPerson,
       contactEmail,
+      contactNumber,
       selectedProducts: selectedProductsArray // Structure the selected products data
     };
 
     try {
-      const response = await fetch("https://script.google.com/macros/s/AKfycbxws4Ba58daZnQYjkTVD9omvQzeX_xAV__VktOLasZjJEWoWNQcN_UAftatraeyFhuoGg/exec", {
+      const response = await fetch("https://script.google.com/macros/s/AKfycbyH1GpsH1hVQtsCivVPwtKY-_4UhRrpL27Z-KbKzhynpb3w90pF0XNCooc4fUXgLwzPLw/exec", {
         method: "POST",
         headers: {
           "Content-Type": "text/plain;charset=utf-8" // Set the Content-Type header
@@ -85,8 +109,10 @@ const Form = () => {
         );
         // Reset fields
         setCompanyName("");
+        setCompanyTradingName("");
         setContactPerson("");
         setContactEmail("");
+        setContactNumber("");
         setSelectedProducts({});
         setFirstPage(true); // Reset the form to first page after successful submission
         setErrorMessage("");
@@ -145,7 +171,21 @@ const Form = () => {
                   value={companyName}
                   onChange={e => setCompanyName(e.target.value)}
                   className="w-full p-2 border border-gray-300 rounded"
-                  placeholder="Enter your company name"
+                  placeholder="e.g. ABC Ltd"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2" htmlFor="companyTradingName">
+                  Trading Name
+                </label>
+                <input
+                  type="text"
+                  id="companyTradingName"
+                  value={companyTradingName}
+                  onChange={e => setCompanyTradingName(e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded"
+                  placeholder="e.g. ABC Trading"
                   required
                 />
               </div>
@@ -178,8 +218,22 @@ const Form = () => {
                   required
                 />
               </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2" htmlFor="contactNumber">
+                  Contact Number
+                </label>
+                <input
+                  type="text"
+                  id="contactNumber"
+                  value={contactNumber}
+                  onChange={e => setContactNumber(e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded"
+                  placeholder="Enter the contact number"
+                  required
+                />
+              </div>
               <div className="text-right">
-                <button type="submit" className={`px-4 py-2 text-white bg-blue-600 rounded ${isSubmitting ? "opacity-50" : ""}`} disabled={isSubmitting}>
+                <button type="submit" className={`px-4 py-2 text-white bg-blue-600 rounded ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}`} disabled={isSubmitting || !allFieldsCompleted()}>
                   {isSubmitting ? "Submitting..." : "Next"}
                 </button>
               </div>
@@ -191,7 +245,7 @@ const Form = () => {
                 <button type="button" onClick={handleBack} className="px-4 py-2 text-white bg-gray-600 rounded">
                   Back
                 </button>
-                <button type="submit" className={`px-4 py-2 text-white bg-blue-600 rounded ${isSubmitting ? "opacity-50" : ""}`} disabled={isSubmitting}>
+                <button type="submit" className={`px-4 py-2 text-white bg-blue-600 rounded ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}`} disabled={isSubmitting || !anyQuantitiesAdded()}>
                   {isSubmitting ? "Submitting..." : "Submit"}
                 </button>
               </div>

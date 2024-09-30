@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/non-compliant-product-form/static/css/main.ffb3b4fd.css",
-    "main.js": "/non-compliant-product-form/static/js/main.5e7b4b4f.js",
+    "main.css": "/non-compliant-product-form/static/css/main.d7d199c2.css",
+    "main.js": "/non-compliant-product-form/static/js/main.87db6e22.js",
     "static/js/453.81b31e02.chunk.js": "/non-compliant-product-form/static/js/453.81b31e02.chunk.js",
     "index.html": "/non-compliant-product-form/index.html",
-    "main.ffb3b4fd.css.map": "/non-compliant-product-form/static/css/main.ffb3b4fd.css.map",
-    "main.5e7b4b4f.js.map": "/non-compliant-product-form/static/js/main.5e7b4b4f.js.map",
+    "main.d7d199c2.css.map": "/non-compliant-product-form/static/css/main.d7d199c2.css.map",
+    "main.87db6e22.js.map": "/non-compliant-product-form/static/js/main.87db6e22.js.map",
     "453.81b31e02.chunk.js.map": "/non-compliant-product-form/static/js/453.81b31e02.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.ffb3b4fd.css",
-    "static/js/main.5e7b4b4f.js"
+    "static/css/main.d7d199c2.css",
+    "static/js/main.87db6e22.js"
   ]
 }

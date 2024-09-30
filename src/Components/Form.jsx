@@ -11,6 +11,7 @@ const Form = () => {
   const [referenceNumber, setReferenceNumber] = useState(""); // State to store the reference number
   const [firstPage, setFirstPage] = useState(true); // Track if we are on the first or second page
   const [selectedProducts, setSelectedProducts] = useState({}); // Store selected products, barcodes, and quantities
+  console.log("🚀 ~ Form ~ selectedProducts:", selectedProducts);
   const [complete, setComplete] = useState(false); // Track if the form submission is complete
 
   // Generate a reference number based on company and account
@@ -39,28 +40,34 @@ const Form = () => {
     setReferenceNumber(reference);
 
     // Prepare the data for submission
-    const selectedProducts = [];
+    const selectedProductsArray = []; // Array to hold selected products data
 
-    // Loop through the selectedProducts object to gather selected products
+    // Loop through each brand in selectedProducts
     for (const brand in selectedProducts) {
+      // Loop through each product within the brand
       for (const productName in selectedProducts[brand]) {
         const product = selectedProducts[brand][productName];
-        // Only consider products that are selected
-        if (product.selected) {
-          const quantities = product.quantities || {};
-          for (const color in quantities) {
-            const quantity = quantities[color];
-            // Only include colors that have a quantity greater than 0
-            if (quantity > 0) {
-              selectedProducts.push({
-                barcode: product.sku, // Assuming SKU is used as barcode
-                quantity: quantity
-              });
-            }
-          }
+        const colors = product.colors || {}; // Colors for the product
+        const quantities = product.quantities || {}; // Quantities for each color
+
+        // Loop through all colors for the product
+        for (const color in colors) {
+          const sku = colors[color]; // SKU associated with the color
+          const quantity = quantities[color] || 0; // Get quantity or default to 0
+
+          // Push the product data into the array
+          selectedProductsArray.push({
+            title: productName, // Product name
+            color: color, // Color name
+            sku: sku, // SKU specific to the color
+            quantity: quantity // Quantity (could be 0)
+          });
         }
       }
     }
+
+    // Debugging output to check the selected products before submission
+    console.log("Selected Products Array:", selectedProductsArray);
 
     // Prepare the row data for submission
     const data = {
@@ -68,14 +75,14 @@ const Form = () => {
       companyName,
       contactPerson,
       contactEmail,
-      selectedProducts // Structure the selected products data
+      selectedProducts: selectedProductsArray // Structure the selected products data
     };
 
     try {
       const response = await fetch("https://script.google.com/macros/s/AKfycbxLvCfkdNTxGoTg6U5fbTiWHMQ1GS-rbxvmUiDXXZRJnCSsKx7wWkCx7UTsGXgnFi5ZsA/exec", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json" // Set the Content-Type header
+          "Content-Type": "text/plain;charset=utf-8" // Set the Content-Type header
         },
         body: JSON.stringify(data), // Stringify the data object
         redirect: "follow" // Follow the redirect response

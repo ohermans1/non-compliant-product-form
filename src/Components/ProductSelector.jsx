@@ -15,6 +15,7 @@ const ProductSelector = ({ selectedProducts, setSelectedProducts }) => {
     if (!acc[brand][productName]) {
       acc[brand][productName] = { colors: [] }; // Store colors in an array
     }
+
     // Ensure colors are unique for each product
     if (!acc[brand][productName].colors.some(existingColor => existingColor.color === color)) {
       acc[brand][productName].colors.push({ color, sku });
@@ -25,20 +26,24 @@ const ProductSelector = ({ selectedProducts, setSelectedProducts }) => {
   const handleProductSelection = (productName, brand) => {
     setSelectedProducts(prev => {
       const isSelected = !prev[brand]?.[productName]?.selected;
+
+      // Ensure quantities are maintained and colors reset if product is unselected
+      const newQuantities = isSelected ? {} : prev[brand]?.[productName]?.quantities || {};
+
       return {
         ...prev,
         [brand]: {
           ...prev[brand],
           [productName]: {
             selected: isSelected,
-            quantities: prev[brand]?.[productName]?.quantities || {} // Maintain previous quantities if toggled
+            quantities: newQuantities // Maintain previous quantities if toggled
           }
         }
       };
     });
   };
 
-  const handleColorChange = (brand, productName, color, value) => {
+  const handleColorChange = (brand, productName, color, sku, value) => {
     setSelectedProducts(prev => ({
       ...prev,
       [brand]: {
@@ -47,7 +52,10 @@ const ProductSelector = ({ selectedProducts, setSelectedProducts }) => {
           ...prev[brand][productName],
           quantities: {
             ...prev[brand][productName]?.quantities,
-            [color]: value // Update the quantity for the specific color
+            [color]: {
+              sku,
+              quantity: value // Update the quantity for the specific color
+            }
           }
         }
       }
@@ -91,15 +99,15 @@ const ProductSelector = ({ selectedProducts, setSelectedProducts }) => {
                           <input
                             type="checkbox"
                             checked={selectedProducts[brand]?.[productName]?.quantities[color] !== undefined}
-                            onChange={() => handleColorChange(brand, productName, color, selectedProducts[brand]?.[productName]?.quantities[color] || "")}
+                            onChange={() => handleColorChange(brand, productName, color, sku, selectedProducts[brand]?.[productName]?.quantities[color]?.quantity || "")}
                             className="mr-2"
                           />
                           <span>{color}</span>
                           <input
                             type="number"
                             placeholder="Qty"
-                            value={selectedProducts[brand]?.[productName]?.quantities[color] || ""}
-                            onChange={e => handleColorChange(brand, productName, color, e.target.value)}
+                            value={selectedProducts[brand]?.[productName]?.quantities[color]?.quantity || ""}
+                            onChange={e => handleColorChange(brand, productName, color, sku, e.target.value)}
                             className="ml-2 w-16 border border-gray-300 rounded p-1"
                             min="0"
                           />

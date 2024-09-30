@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import ProductSelector from "./ProductSelector"; // Assuming this file is named ProductSelector.js
-
+import { productData } from "../Data/data";
 const Form = () => {
   const [companyName, setCompanyName] = useState("");
   const [contactPerson, setContactPerson] = useState("");
@@ -40,38 +40,31 @@ const Form = () => {
     setReferenceNumber(reference);
 
     // Prepare the data for submission
-    const selectedProductsArray = []; // Array to hold selected products data
+    const selectedProductsArray = [];
 
-    // Loop through each brand in selectedProducts
-    for (const brand in selectedProducts) {
-      // Loop through each product within the brand
-      for (const productName in selectedProducts[brand]) {
-        const product = selectedProducts[brand][productName];
-        const colors = product.colors || {}; // Colors for the product
-        const quantities = product.quantities || {}; // Quantities for each color
+    // Loop through all available products from productData to ensure consistent order
+    productData.forEach(({ brand, product: productName, color, sku }) => {
+      const product = selectedProducts[brand]?.[productName]; // Check if the product has been selected
+      const quantities = product?.quantities || {}; // Quantities for each color if selected
 
-        // Loop through all colors for the product
-        for (const color in colors) {
-          const sku = colors[color]; // SKU associated with the color
-          const quantity = quantities[color] || 0; // Get quantity or default to 0
+      const quantityForColor = quantities[color]?.quantity || 0; // If not selected, default to 0
+      const skuForColor = quantities[color]?.sku || "-"; // If no SKU, default to "-"
 
-          // Push the product data into the array
-          selectedProductsArray.push({
-            title: productName, // Product name
-            color: color, // Color name
-            sku: sku, // SKU specific to the color
-            quantity: quantity // Quantity (could be 0)
-          });
-        }
-      }
-    }
+      // Add product data to the array (even if not selected)
+      selectedProductsArray.push({
+        title: productName, // Product name
+        color: color, // Color name
+        sku: skuForColor, // SKU (or "-" if not selected)
+        quantity: quantityForColor // Quantity (or 0 if not selected)
+      });
+    });
 
     // Debugging output to check the selected products before submission
     console.log("Selected Products Array:", selectedProductsArray);
 
     // Prepare the row data for submission
     const data = {
-      referenceNumber: reference, // Add the reference number here
+      referenceNumber: reference,
       companyName,
       contactPerson,
       contactEmail,
@@ -79,7 +72,7 @@ const Form = () => {
     };
 
     try {
-      const response = await fetch("https://script.google.com/macros/s/AKfycbxLvCfkdNTxGoTg6U5fbTiWHMQ1GS-rbxvmUiDXXZRJnCSsKx7wWkCx7UTsGXgnFi5ZsA/exec", {
+      const response = await fetch("https://script.google.com/macros/s/AKfycbxCTpQD8vWdRbizgmEW5olF0QpRdWi1I8rjcLhJvOtT0j1dpA634WNRh21mEqnZy21WyA/exec", {
         method: "POST",
         headers: {
           "Content-Type": "text/plain;charset=utf-8" // Set the Content-Type header

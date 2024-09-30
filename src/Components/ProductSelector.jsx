@@ -27,8 +27,13 @@ const ProductSelector = ({ selectedProducts, setSelectedProducts }) => {
     setSelectedProducts(prev => {
       const isSelected = !prev[brand]?.[productName]?.selected;
 
-      // Ensure quantities are maintained and colors reset if product is unselected
-      const newQuantities = isSelected ? {} : prev[brand]?.[productName]?.quantities || {};
+      // Reset all quantities to 0 if the product is being deselected
+      const newQuantities = isSelected
+        ? {}
+        : Object.keys(prev[brand]?.[productName]?.quantities || {}).reduce((acc, color) => {
+            acc[color] = { sku: prev[brand][productName].quantities[color].sku, quantity: 0 }; // Reset quantity to 0
+            return acc;
+          }, {});
 
       return {
         ...prev,
@@ -44,22 +49,26 @@ const ProductSelector = ({ selectedProducts, setSelectedProducts }) => {
   };
 
   const handleColorChange = (brand, productName, color, sku, value) => {
-    setSelectedProducts(prev => ({
-      ...prev,
-      [brand]: {
-        ...prev[brand],
-        [productName]: {
-          ...prev[brand][productName],
-          quantities: {
-            ...prev[brand][productName]?.quantities,
-            [color]: {
-              sku,
-              quantity: value // Update the quantity for the specific color
-            }
+    setSelectedProducts(prev => {
+      const newQuantities = {
+        ...prev[brand][productName]?.quantities,
+        [color]: {
+          sku,
+          quantity: value === "" ? 0 : value // Reset to 0 if the input is empty
+        }
+      };
+
+      return {
+        ...prev,
+        [brand]: {
+          ...prev[brand],
+          [productName]: {
+            ...prev[brand][productName],
+            quantities: newQuantities
           }
         }
-      }
-    }));
+      };
+    });
   };
 
   const toggleBrandExpansion = brand => {
@@ -72,10 +81,14 @@ const ProductSelector = ({ selectedProducts, setSelectedProducts }) => {
   return (
     <div>
       <h2 className="text-xl font-bold mb-4">Select Products</h2>
+      <p className="text-lg mb-4">Please select the products you wish to return and specify the quantities for each colour below.</p>
       {Object.keys(groupedProducts).map(brand => (
         <div key={brand} className="mb-4 border-b">
-          <h3 className="cursor-pointer text-lg font-semibold" onClick={() => toggleBrandExpansion(brand)}>
-            {brand}
+          <h3 className="cursor-pointer text-lg font-semibold flex justify-between items-center" onClick={() => toggleBrandExpansion(brand)}>
+            <span>{brand}</span>
+            <span>
+              {expandedBrands[brand] ? "▼" : "▲"} {/* Downward or upward chevron */}
+            </span>
           </h3>
           {expandedBrands[brand] && (
             <div className="ml-4 mt-2">
@@ -99,7 +112,16 @@ const ProductSelector = ({ selectedProducts, setSelectedProducts }) => {
                           <input
                             type="checkbox"
                             checked={selectedProducts[brand]?.[productName]?.quantities[color] !== undefined}
-                            onChange={() => handleColorChange(brand, productName, color, sku, selectedProducts[brand]?.[productName]?.quantities[color]?.quantity || "")}
+                            onChange={e => {
+                              const isChecked = e.target.checked;
+                              if (!isChecked) {
+                                // If unchecked, reset quantity to 0
+                                handleColorChange(brand, productName, color, sku, "0");
+                              } else {
+                                // If checked, keep current quantity or reset if not set
+                                handleColorChange(brand, productName, color, sku, selectedProducts[brand]?.[productName]?.quantities[color]?.quantity || "0");
+                              }
+                            }}
                             className="mr-2"
                           />
                           <span>{color}</span>

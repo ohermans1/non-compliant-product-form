@@ -11,7 +11,6 @@ const Form = () => {
   const [referenceNumber, setReferenceNumber] = useState(""); // State to store the reference number
   const [firstPage, setFirstPage] = useState(true); // Track if we are on the first or second page
   const [selectedProducts, setSelectedProducts] = useState({}); // Store selected products, barcodes, and quantities
-  console.log("🚀 ~ Form ~ selectedProducts:", selectedProducts);
   const [complete, setComplete] = useState(false); // Track if the form submission is complete
 
   // Generate a reference number based on company and account
@@ -56,12 +55,10 @@ const Form = () => {
         title: productName, // Product name
         color: color, // Color name
         sku: skuForColor, // SKU (or "-" if not selected)
-        quantity: quantityForColor // Quantity (or 0 if not selected)
+        quantity: quantityForColor, // Quantity (or 0 if not selected)
+        brand: brand
       });
     });
-
-    // Debugging output to check the selected products before submission
-    console.log("Selected Products Array:", selectedProductsArray);
 
     // Prepare the row data for submission
     const data = {
@@ -73,7 +70,7 @@ const Form = () => {
     };
 
     try {
-      const response = await fetch("https://script.google.com/macros/s/AKfycbxf-gAoblQqZAU6eDpBJq7aOT7d4rS5LyP7GAF42hZwhrBH30ZdMfl2IHA9NgRZNKt5jQ/exec", {
+      const response = await fetch("https://script.google.com/macros/s/AKfycbykfmY-bwaV_323i93t6KzBc5lbleyWYls_IdvaDTIfG_30xyUPO_hAkkz3eW6sr0omAw/exec", {
         method: "POST",
         headers: {
           "Content-Type": "text/plain;charset=utf-8" // Set the Content-Type header
@@ -115,13 +112,19 @@ const Form = () => {
       <h1 className="text-2xl font-bold mb-6">Returns - Non-Compliant Products</h1>
       <p className="text-base mb-4">
         Complete this form to return products following the <strong>October 1 Legislation changes</strong>.{" "}
-        <a href="link" className="text-blue-600 underline">
+        <a
+          target="_blank"
+          href="https://www.health.govt.nz/news/vaping-regulations-coming-into-effect-1-october#:~:text=The%20deadline%20for%20all%20vaping,be%20sold%20from%20this%20date."
+          className="text-blue-600 underline"
+          rel="noreferrer"
+        >
           Learn more
         </a>
       </p>
       {successMessage && (
         <div className="mb-4 p-4 bg-green-100 text-green-700 rounded">
           {successMessage}
+          <br />
           <p>
             Reference Number: <strong>{referenceNumber}</strong>
           </p>

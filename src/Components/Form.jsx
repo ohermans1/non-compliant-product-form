@@ -11,19 +11,27 @@ const Form = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [referenceNumber, setReferenceNumber] = useState(""); // State to store the reference number
-  const [firstPage, setFirstPage] = useState(true); // Track if we are on the first or second page
-  const [selectedProducts, setSelectedProducts] = useState({}); // Store selected products, barcodes, and quantities
-  const [complete, setComplete] = useState(false); // Track if the form submission is complete
+  const [referenceNumber, setReferenceNumber] = useState("");
+  const [firstPage, setFirstPage] = useState(true);
+  const [selectedProducts, setSelectedProducts] = useState({});
+  const [complete, setComplete] = useState(false);
+
+  // New state for the checkboxes
+  const [checkboxes, setCheckboxes] = useState({
+    kitOnly: false,
+    purchasedWithin12Months: false,
+    sealedAndUnopened: false,
+    serialNumberVerification: false
+  });
 
   // Generate a reference number based on company and account
   const generateReferenceNumber = () => {
     const companySegment = companyName.replace(/\s+/g, "").slice(0, 4).toUpperCase();
     const now = new Date();
-    const hoursSegment = String(now.getHours()).padStart(2, "0"); // Get hours in 24-hour format
-    const minutesSegment = String(now.getMinutes()).padStart(2, "0"); // Get minutes and format to 2 digits
+    const hoursSegment = String(now.getHours()).padStart(2, "0");
+    const minutesSegment = String(now.getMinutes()).padStart(2, "0");
 
-    return `${companySegment}-${hoursSegment}${minutesSegment}`; // Combine hours and minutes
+    return `${companySegment}-${hoursSegment}${minutesSegment}`;
   };
 
   // Check if all fields are completed
@@ -97,7 +105,7 @@ const Form = () => {
       const response = await fetch("https://script.google.com/macros/s/AKfycbztqx1TsXp5MaIj3I35PBQ3-v6DnSvCtWj19DD-Ql5083u31Ajr6LrlQvKeUIDZIsAeyA/exec", {
         method: "POST",
         headers: {
-          "Content-Type": "text/plain;charset=utf-8" // Set the Content-Type header
+          "Content-Type": "text/plain;charset=utf-8"
         },
         body: JSON.stringify(data), // Stringify the data object
         redirect: "follow" // Follow the redirect response
@@ -117,6 +125,13 @@ const Form = () => {
         setFirstPage(true); // Reset the form to first page after successful submission
         setErrorMessage("");
         setComplete(true);
+        setCheckboxes({
+          // Reset checkboxes
+          kitOnly: false,
+          purchasedWithin12Months: false,
+          sealedAndUnopened: false,
+          serialNumberVerification: false
+        });
       } else {
         setErrorMessage("There was an issue submitting the response.");
       }
@@ -131,6 +146,20 @@ const Form = () => {
   // Go back to the first form (company and contact details)
   const handleBack = () => {
     setFirstPage(true);
+  };
+
+  // Handle checkbox change
+  const handleCheckboxChange = e => {
+    const { name, checked } = e.target;
+    setCheckboxes(prevCheckboxes => ({
+      ...prevCheckboxes,
+      [name]: checked
+    }));
+  };
+
+  // Check if all checkboxes are checked
+  const allCheckboxesChecked = () => {
+    return Object.values(checkboxes).every(checked => checked);
   };
 
   return (
@@ -247,14 +276,38 @@ const Form = () => {
           ) : (
             <>
               <ProductSelector selectedProducts={selectedProducts} setSelectedProducts={setSelectedProducts} />
+              <div className="mb-4">
+                {/* Checkboxes for return conditions */}
+                <label className="block text-sm font-medium mb-2">Please confirm the following:</label>
+                <div className="flex flex-col space-y-2">
+                  {" "}
+                  {/* Space added between checkboxes */}
+                  <label className="flex items-center">
+                    <input type="checkbox" name="kitOnly" checked={checkboxes.kitOnly} onChange={handleCheckboxChange} className="mr-2" />I understand that returns apply only to kits, not accessories
+                    (Pods and coils).
+                  </label>
+                  <label className="flex items-center">
+                    <input type="checkbox" name="purchasedWithin12Months" checked={checkboxes.purchasedWithin12Months} onChange={handleCheckboxChange} className="mr-2" />I confirm that the kits were
+                    purchased from Lion Labs within the last 12 months.
+                  </label>
+                  <label className="flex items-center">
+                    <input type="checkbox" name="sealedAndUnopened" checked={checkboxes.sealedAndUnopened} onChange={handleCheckboxChange} className="mr-2" />I confirm that the kits are sealed and
+                    unopened.
+                  </label>
+                  <label className="flex items-center">
+                    <input type="checkbox" name="serialNumberVerification" checked={checkboxes.serialNumberVerification} onChange={handleCheckboxChange} className="mr-2" />I acknowledge that all
+                    product serial numbers will be verified. Any kits not supplied by Lion Labs won't be credited or returned.
+                  </label>
+                </div>
+              </div>
               <div className="flex justify-between mt-4">
                 <button type="button" onClick={handleBack} className="px-4 py-2 text-white bg-gray-600 rounded">
                   Back
                 </button>
                 <button
                   type="submit"
-                  className={`px-4 py-2 text-white bg-blue-600 rounded ${isSubmitting || !anyQuantitiesAdded() ? "bg-gray-600 opacity-50 cursor-not-allowed" : ""}`}
-                  disabled={isSubmitting || !anyQuantitiesAdded()}
+                  className={`px-4 py-2 text-white bg-blue-600 rounded ${isSubmitting || !anyQuantitiesAdded() || !allCheckboxesChecked() ? "bg-gray-600 opacity-50 cursor-not-allowed" : ""}`}
+                  disabled={isSubmitting || !anyQuantitiesAdded() || !allCheckboxesChecked()}
                 >
                   {isSubmitting ? "Submitting..." : "Submit"}
                 </button>

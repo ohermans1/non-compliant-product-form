@@ -81,7 +81,7 @@ const ProductSelector = ({ selectedProducts, setSelectedProducts }) => {
   return (
     <div>
       <h2 className="text-xl font-bold mb-4">Select Products</h2>
-      <p className="text-lg mb-4">Please select the products you wish to return and specify the quantities for each colour below.</p>
+      <p className="text-base mb-4">Please select the products you wish to return and specify the quantities for each colour below.</p>
       {Object.keys(groupedProducts).map(brand => (
         <div key={brand} className="mb-4 border-b">
           <h3 className="cursor-pointer text-lg font-semibold flex justify-between items-center" onClick={() => toggleBrandExpansion(brand)}>
@@ -111,15 +111,16 @@ const ProductSelector = ({ selectedProducts, setSelectedProducts }) => {
                         <div key={sku} className="flex items-center mb-2">
                           <input
                             type="checkbox"
-                            checked={selectedProducts[brand]?.[productName]?.quantities[color] !== undefined}
+                            checked={selectedProducts[brand]?.[productName]?.quantities[color]?.quantity > 0 || false} // Check if quantity is greater than 0
                             onChange={e => {
                               const isChecked = e.target.checked;
                               if (!isChecked) {
                                 // If unchecked, reset quantity to 0
                                 handleColorChange(brand, productName, color, sku, "0");
                               } else {
-                                // If checked, keep current quantity or reset if not set
-                                handleColorChange(brand, productName, color, sku, selectedProducts[brand]?.[productName]?.quantities[color]?.quantity || "0");
+                                // If checked, set quantity to 1 if no value is present
+                                const currentQuantity = selectedProducts[brand]?.[productName]?.quantities[color]?.quantity;
+                                handleColorChange(brand, productName, color, sku, currentQuantity > 0 ? currentQuantity : "1");
                               }
                             }}
                             className="mr-2"

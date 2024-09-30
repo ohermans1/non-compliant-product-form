@@ -70,7 +70,7 @@ const Form = () => {
     };
 
     try {
-      const response = await fetch("https://script.google.com/macros/s/AKfycbykfmY-bwaV_323i93t6KzBc5lbleyWYls_IdvaDTIfG_30xyUPO_hAkkz3eW6sr0omAw/exec", {
+      const response = await fetch("https://script.google.com/macros/s/AKfycbxws4Ba58daZnQYjkTVD9omvQzeX_xAV__VktOLasZjJEWoWNQcN_UAftatraeyFhuoGg/exec", {
         method: "POST",
         headers: {
           "Content-Type": "text/plain;charset=utf-8" // Set the Content-Type header

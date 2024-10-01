@@ -21,7 +21,8 @@ const Form = () => {
     kitOnly: false,
     purchasedWithin12Months: false,
     sealedAndUnopened: false,
-    serialNumberVerification: false
+    serialNumberVerification: false,
+    shipping: false
   });
 
   // Generate a reference number based on company and account
@@ -296,7 +297,11 @@ const Form = () => {
                   </label>
                   <label className="flex items-center">
                     <input type="checkbox" name="serialNumberVerification" checked={checkboxes.serialNumberVerification} onChange={handleCheckboxChange} className="mr-2" />I acknowledge that all
-                    product serial numbers will be verified. Any kits not supplied by Lion Labs won't be credited or returned.
+                    product serial numbers will be verified, and any kits found not to be supplied by Lion Labs will not be eligible for credit or return.{" "}
+                  </label>
+                  <label className="flex items-center">
+                    <input type="checkbox" name="shipping" checked={checkboxes.shipping} onChange={handleCheckboxChange} className="mr-2" />I acknowledge that I am responsible for all shipping costs
+                    when returning the stock to Lion Labs.
                   </label>
                 </div>
               </div>

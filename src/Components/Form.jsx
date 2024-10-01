@@ -276,7 +276,7 @@ const Form = () => {
           ) : (
             <>
               <ProductSelector selectedProducts={selectedProducts} setSelectedProducts={setSelectedProducts} />
-              <div className="mb-4">
+              <div className="mb-4 mt-6">
                 {/* Checkboxes for return conditions */}
                 <label className="block text-sm font-medium mb-2">Please confirm the following:</label>
                 <div className="flex flex-col space-y-2">

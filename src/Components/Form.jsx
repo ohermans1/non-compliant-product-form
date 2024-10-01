@@ -103,7 +103,7 @@ const Form = () => {
     };
 
     try {
-      const response = await fetch("https://script.google.com/macros/s/AKfycbztqx1TsXp5MaIj3I35PBQ3-v6DnSvCtWj19DD-Ql5083u31Ajr6LrlQvKeUIDZIsAeyA/exec", {
+      const response = await fetch("https://script.google.com/macros/s/AKfycbyG9SzsQ6vFW2TfjZnJPVI5Tzug1Kl4GDM2oK4cnqdEWemFg89CxAiA74ofX_nUR0ZPrA/exec", {
         method: "POST",
         headers: {
           "Content-Type": "text/plain;charset=utf-8"

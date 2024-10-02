@@ -35,6 +35,8 @@ export const productData = [
   { brand: "Geekvape", product: "B100 (Boost Pro 2) Pod Mod Kit", color: "Golden Red", sku: "1000117982" },
   { brand: "Geekvape", product: "B100 (Boost Pro 2) Pod Mod Kit", color: "Rainbow", sku: "1000117985" },
   { brand: "Geekvape", product: "B100 (Boost Pro 2) Pod Mod Kit", color: "Blue Red", sku: "6974622809072" },
+  { brand: "Geekvape", product: "B100 (Boost Pro 2) Pod Mod Kit", color: "Mint Blue", sku: "1000117983" },
+  { brand: "Geekvape", product: "B100 (Boost Pro 2) Pod Mod Kit", color: "Pink Purple", sku: "6974622809089" },
 
   { brand: "Geekvape", product: "B60 (Aegis Boost 2) Pod Mod Kit", color: "Rainbow", sku: "1000116690" },
   { brand: "Geekvape", product: "B60 (Aegis Boost 2) Pod Mod Kit", color: "Black", sku: "1000116688" },

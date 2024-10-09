@@ -256,7 +256,6 @@ export const productData = [
   { brand: "Voopoo", product: "Drag X 80W Mod Pod Kit", color: "Classics", sku: "1000108478" },
   { brand: "Voopoo", product: "Drag X 80W Mod Pod Kit", color: "Carbon Fiber", sku: "1000108482" },
   { brand: "Voopoo", product: "Drag X 80W Mod Pod Kit", color: "Classic", sku: "1000108478" },
-  { brand: "Voopoo", product: "Drag X 80W Mod Pod Kit", color: "Carbon Fiber", sku: "1000108482" },
   { brand: "Voopoo", product: "V.Thru Pro Pod Kit", color: "Space Grey", sku: "1000109660" },
   { brand: "Voopoo", product: "V.Thru Pro Pod Kit", color: "Rosy", sku: "1000109658" },
   { brand: "Voopoo", product: "V.Thru Pro Pod Kit", color: "Neon", sku: "1000109656" },

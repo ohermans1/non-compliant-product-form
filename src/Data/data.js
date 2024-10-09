@@ -120,7 +120,6 @@ export const productData = [
   { brand: "Uwell", product: "Caliburn G2 Pod System Kit 750mAh 2ml", color: "Cobalt Green", sku: "1000115371" },
   { brand: "Uwell", product: "Caliburn G2 Pod System Kit 750mAh 2ml", color: "Gradient", sku: "1000115368" },
   { brand: "Uwell", product: "Caliburn G2 Pod System Kit 750mAh 2ml", color: "Pyrrole Scarlet", sku: "1000115370" },
-  { brand: "Uwell", product: "Caliburn G2 Pod System Kit 750mAh 2ml", color: "Ultramarine Blue", sku: "1000115373" },
   { brand: "Uwell", product: "Caliburn GK2 Pod System Kit 690mAh", color: "Aurora Green", sku: "1000116393" },
   { brand: "Uwell", product: "Caliburn GK2 Pod System Kit 690mAh", color: "Ribbon Red", sku: "1000116394" },
   { brand: "Uwell", product: "Caliburn GK2 Pod System Kit 690mAh", color: "Ocean Flame", sku: "1000116395" },
